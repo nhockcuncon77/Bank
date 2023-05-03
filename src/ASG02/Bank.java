@@ -1,3 +1,5 @@
+package ASG02;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,17 +32,29 @@ public class Bank {
                     return;
                 }
             }
-            if(customer.getCustomerId().equals(customerId)){
+            if(customer.getCustomerId().equals(customerId) && !isAccountExisted(account.getAccountNumber())){
                 customer.addAccount(account);
                 return;
             }
         }
         System.out.println("Customer not found");
+
     }
     public boolean isCustomerExisted(String CustomerId){
         for(Customer customer: customers){
             if(customer.getCustomerId().equals(CustomerId)){
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAccountExisted(String AccountNumber){
+        for(Customer customer: customers){
+            for(Account acc: customer.getAccounts()){
+                if(acc.getAccountNumber().equals(AccountNumber)) {
+                    return true;
+                }
             }
         }
         return false;

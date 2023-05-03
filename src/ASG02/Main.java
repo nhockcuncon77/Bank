@@ -1,8 +1,13 @@
+package ASG02;
+
 import java.util.Scanner;
 
-
+/**
+ * Hiển thị menu chức năng và lựa chọn thực hiện chức năng tương ứng
+ */
 public class Main {
     static Bank bank = new Bank();
+    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
         String chucNang;
         do{
@@ -17,95 +22,130 @@ public class Main {
             System.out.println(" 0. Thoat");
             System.out.println("+----------------+------------------------------+");
             System.out.println("Chuc nang: ");
-            Scanner sc = new Scanner(System.in);
+
             chucNang = sc.next();
             switch (chucNang) {
                 case "1":
-                    sc.nextLine();
-                    System.out.print("Nhap ten khach hang:");
-                    String cccd;
-                    String name = sc.nextLine();
-                    do{
-                        System.out.print("Nhap so CCCD: ");
-                        cccd = sc.nextLine();
-                        checkso(cccd,12);
-                        if(!checkso(cccd,12)){
-                            System.out.println("Nhap lai can cuoc cong dan");
-                        }
-
-                    }while(!checkso(cccd,12));
-                    Customer customer = new Customer(name,cccd);
-                    bank.addCustomer(customer);
+                    themKhachHang();
                     break;
                 case "2":
-                    sc.nextLine();
-                    System.out.print("NHap CCCD khach hang: ");
-                    String cccd1 = sc.nextLine();
-                    String stk;
-                    do{
-                        System.out.print("Nhap ma STK gom 6 so: ");
-                        stk = sc.nextLine();
-                        checkso(stk,6);
-                        if(!checkso(stk,6)){
-                            System.out.println("Nhap lai STK");
-                        }
-
-                    }while(!checkso(stk,6));
-
-
-                    System.out.print("Nhap so du: ");
-                    double sodu = sc.nextDouble();
-                    Account account = new Account(stk, sodu);
-                    bank.addAccount(cccd1, account);
+                    themTaiKhoan();
                     break;
                 case "3":
-                    for(Customer cus : bank.getCustomers()){
-                        cus.displayInformation();
-                    }
+                    hienThiDanhSach();
                     break;
                 case "4":
-                    sc.nextLine();
-                    System.out.println("Nhap can cuoc cong dan can tim: ");
-                    String cccd2 = sc.nextLine();
-                    boolean check = false;
-                    for(Customer custom : bank.getCustomers()){
-                        if(custom.getCustomerId().equals(cccd2)){
-                            custom.displayInformation();
-                            check = true;
-                        }
-                    }
-                    if(check == false){
-                        System.out.println("Khong tim thay so can cuoc cong dan");
-                    }
+                    timTheoCCCD();
                     break;
                 case "5":
-                    sc.nextLine();
-                    System.out.println("Nhap ten khach hang: ");
-                    String ten = sc.nextLine();
-                    boolean check_ten = false;
-                    for(Customer custom : bank.getCustomers()){
-                        if(custom.getName().contains(ten)){
-                            custom.displayInformation();
-                            check_ten = true;
-                        }
-                    }
-                    if(check_ten == false){
-                        System.out.println("Khong tim ten khach hang!");
-                    }
+                    timTheoTen();
                     break;
                 case "0":
                     break;
             }
         }while(!chucNang.equals("0"));
     }
-
-    public static boolean checkso(String cccd, int length){
+    /**
+     * Kiểm tra số CCCD có đúng định dạng và độ dài hay không
+     * @param cccd chuỗi số CCCD cần kiểm tra
+     * @param length độ dài chuỗi số CCCD
+     * @return true nếu chuỗi CCCD hợp lệ, ngược lại trả về false
+     */
+    public static boolean checkSo(String cccd, int length){
         // kiểm tra độ dài của chuỗi có đúng 12 kí tự không
         if (cccd.length() != length) {
             return false;
         }
         // kiểm tra chuỗi có chỉ chứa số hay không
         return cccd.matches("[0-9]+");
+    }
+    /**
+     * Thêm khách hàng mới vào danh sách khách hàng của ngân hàng
+     */
+    public static void themKhachHang(){
+        sc.nextLine();
+        System.out.print("Nhap ten khach hang:");
+        String cccd;
+        String name = sc.nextLine();
+        do{
+            System.out.print("Nhap so CCCD: ");
+            cccd = sc.nextLine();
+            checkSo(cccd,12);
+            if(!checkSo(cccd,12)){
+                System.out.println("Nhap lai can cuoc cong dan");
+            }
+
+        }while(!checkSo(cccd,12));
+        Customer customer = new Customer(name,cccd);
+        bank.addCustomer(customer);
+    }
+    /**
+     * Thêm tài khoản cho một khách hàng đã tồn tại trong danh sách khách hàng của ngân hàng
+     */
+    public static void themTaiKhoan(){
+        sc.nextLine();
+        System.out.print("NHap CCCD khach hang: ");
+        String cccd1 = sc.nextLine();
+        String stk;
+        do{
+            System.out.print("Nhap ma STK gom 6 so: ");
+            stk = sc.nextLine();
+            checkSo(stk,6);
+            if(!checkSo(stk,6)){
+                System.out.println("Nhap lai STK");
+            }
+
+        }while(!checkSo(stk,6));
+
+
+        System.out.print("Nhap so du: ");
+        double sodu = sc.nextDouble();
+        Account account = new Account(stk, sodu);
+        bank.addAccount(cccd1, account);
+    }
+    /**
+     * Hiển thị thông tin tất cả các khách hàng trong danh sách của ngân hàng
+     */
+    public static void hienThiDanhSach(){
+        for(Customer cus : bank.getCustomers()){
+            cus.displayInformation();
+        }
+    }
+    /**
+     * Tìm kiếm khách hàng theo số CCCD
+     */
+    public static void timTheoCCCD(){
+        sc.nextLine();
+        System.out.println("Nhap can cuoc cong dan can tim: ");
+        String cccd2 = sc.nextLine();
+        boolean check = false;
+        for(Customer custom : bank.getCustomers()){
+            if(custom.getCustomerId().equals(cccd2)){
+                custom.displayInformation();
+                check = true;
+            }
+        }
+        if(check == false){
+            System.out.println("Khong tim thay so can cuoc cong dan");
+        }
+    }
+    /**
+     * Tìm kiếm khách hàng theo tên
+     */
+    public static void timTheoTen(){
+        sc.nextLine();
+        System.out.println("Nhap ten khach hang: ");
+        String ten = sc.nextLine();
+        boolean check_ten = false;
+        for(Customer custom : bank.getCustomers()){
+            if(custom.getName().contains(ten)){
+                custom.displayInformation();
+                check_ten = true;
+            }
+        }
+        if(check_ten == false){
+            System.out.println("Khong tim ten khach hang!");
+        }
     }
 
 }

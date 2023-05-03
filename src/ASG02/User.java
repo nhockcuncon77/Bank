@@ -1,3 +1,5 @@
+package ASG02;
+
 public class User {
     private String name;
     private String customerId;
@@ -6,9 +8,9 @@ public class User {
 
     }
 
-    public User(String name, String customerId){
-        this.name = name;
+    public User(String customerId, String name){
         this.customerId = customerId;
+        this.name = name;
     }
 
     public String getName(){

@@ -1,27 +1,23 @@
 package ASG03;
 
 import ASG02.Account;
-import ASG02.Customer;
 
-import java.sql.Array;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class SavingsAccount extends Account implements ReportService, WithDraw {
-    final static double SAVINGS_ACCOUNT_MAX_WITHDRAW = 5000000;
+public class LoansAccount extends Account implements ReportService, WithDraw{
+    List<Transaction> listTransactions = new ArrayList<Transaction>();
     Locale locale = new Locale("vi", "VN");
     NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-    List<Transaction> listTransactions = new ArrayList<Transaction>();
-    public SavingsAccount(String accountNumber, double balance) {
+
+    public LoansAccount(String accountNumber, double balance) {
         super(accountNumber, balance);
     }
     @Override
     public boolean withdraw(double amount){
         if(isAccepted(amount)){
-            super.setBalance(super.getBalance() - amount);
-            System.out.println("Success");
             log(amount);
 
             return true;
@@ -30,32 +26,28 @@ public class SavingsAccount extends Account implements ReportService, WithDraw {
     }
     @Override
     public boolean isAccepted(double amount){
-        if(amount > SAVINGS_ACCOUNT_MAX_WITHDRAW && super.isPremium() == false){
-            System.out.println("You cannot withdraw more than" + SAVINGS_ACCOUNT_MAX_WITHDRAW);
+        if(amount > 100000000 ){
+            System.out.println("Hạn mức không được quá giới hạn 100.000.000đ" );
             return false;
-        } else if(super.getBalance() - amount < 0){
-            System.out.println("Ban khong du tien de rut!!!");
-            return false;
-        } else if(amount < 50000){
-            System.out.println("So tien toi thieu phai rut la 50000!!!");
-            return false;
-        } else if(amount % 10000 != 0){
-            System.out.println("So tien phai rut phai la boi so cua 10000!!!");
+        } else if(super.getBalance() - amount - amount* (super.isPremium() == true ? 0.01 : 0.05) < 50000){
+            System.out.println("Hạn mức còn lại sau khi rút tiền không được nhỏ hơn 50.000đ");
             return false;
         }
         return true;
     }
-    @Override
+
     public void log(double amount){
+        boolean check = super.isPremium();
+        super.setBalance(super.getBalance() - amount - amount* (super.isPremium() == true ? 0.01 : 0.05));
         System.out.println("+--------------+-----------------------------+");
-        System.out.println("BIEN LAI GIAO DICH SAVINGS");
+        System.out.println("BIEN LAI GIAO DICH LOANS");
         String date = getDate();
         System.out.println("NGAY G/D: " + date);
         System.out.println("ATM ID: DIGITAL-BANK-ATM-2023");
         System.out.println("SO TK:       " + super.getAccountNumber());
         System.out.println("So TIEN:     " + formatter.format(amount));
         System.out.println("SO DU:       " + formatter.format(super.getBalance()));
-        System.out.println("PHI + VAT:   " + 0 );
+        System.out.println("PHI + VAT:   " + formatter.format(amount* (check ? 0.01 : 0.05) ));
         System.out.println("+--------------+-----------------------------+");
         Transaction transaction = new Transaction(super.getAccountNumber(), amount, date, true);
         listTransactions.add(transaction);
@@ -73,12 +65,11 @@ public class SavingsAccount extends Account implements ReportService, WithDraw {
             System.out.println(transaction);
         }
     }
-
     @Override
     public String toString() {
 
         Locale locale = new Locale("vi", "VN");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-        return getAccountNumber() + " | SAVING           " + formatter.format(getBalance());
+        return getAccountNumber() + " | LOAN           " + formatter.format(getBalance());
     }
 }
