@@ -76,7 +76,7 @@ public class Main {
             }
 
         }while(!checkSo(cccd,12));
-        Customer customer = new Customer(name,cccd);
+        Customer customer = new Customer(cccd,name);
         bank.addCustomer(customer);
     }
     /**
@@ -97,9 +97,20 @@ public class Main {
 
         }while(!checkSo(stk,6));
 
-
-        System.out.print("Nhap so du: ");
-        double sodu = sc.nextDouble();
+        double sodu;
+        do{
+            try{
+                System.out.print("Nhap so du: ");
+                sodu = sc.nextDouble();
+                if(sodu >0){
+                    break;
+                }
+                System.out.println("Nhap so du duong: ");
+            }catch(Exception e){
+                sc.nextLine();
+                System.out.println("Nhap lai so du:");
+            }
+        }while(true);
         Account account = new Account(stk, sodu);
         bank.addAccount(cccd1, account);
     }
