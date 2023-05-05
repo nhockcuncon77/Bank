@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class DigitalBank extends Bank {
 
+    static Scanner sc = new Scanner(System.in);
+
     public boolean withdraw(String customerId, String accountNumber, double amount){
         for(Customer cus : getCustomers()){
             if(cus.getCustomerId().equals(customerId)){
@@ -68,8 +70,8 @@ public class DigitalBank extends Bank {
         }
         else{
             for(Customer cus : customerList){
-                System.out.println(cus);
-//                cus.displayInformation();
+//                System.out.println(cus);
+                cus.displayInformation();
             }
         }
     }
@@ -108,6 +110,67 @@ public class DigitalBank extends Bank {
             }
         }
         return true;
+    }
+
+    public void addSavingAccount(String customerId) throws IOException {
+        Customer customer = findCustomerById(customerId);
+        List<Account> AccountNews = AccountDao.list();
+        double balance;
+        String accountNumber;
+        Account Accountnew;
+        if (customer != null) {
+            System.out.println("Tạo tài khoản mới cho khách hàng " + customer.getName() + ".");
+            do {
+                System.out.print("Nhập ma so tai khoan khach hang : ");
+                accountNumber = sc.nextLine();
+                Accountnew = new Account();
+                Accountnew.setAccountNumber(accountNumber);
+            }while (!checkAccountID(accountNumber) || isAccountExisted(AccountNews, Accountnew ));
+            do {
+                System.out.print("Nhập số dư tai khoan >= 50000đ: ");
+                balance = sc.nextDouble();
+            } while (balance <= 50000);
+            SavingsAccount account = new SavingsAccount(accountNumber, balance);
+            account.setCustomerId(customerId);
+            AccountDao.update(account);
+            System.out.println("Đã thêm tài khoản mới cho khách hàng " + customer.getName() + ".");
+        } else {
+            System.out.println("Không tìm thấy khách hàng với số ID là " + customerId + ".");
+        }
+        sc.nextLine();
+    }
+
+    public boolean isAccountExisted(List<Account> accountsList, Account newAccount) {
+        for (Account account : accountsList) {
+            if (account.getAccountNumber().equals(newAccount.getAccountNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void withdraw(String customerId) {
+        List <Transaction> T1 = TransactionDao.list();
+        Customer customer = findCustomerById(customerId);
+        customer.displayAccounts();
+        System.out.println("ok ?");
+        List<Account> accountList = AccountDao.list();
+        Account acc1 = new Account();
+        if (customer == null) {
+            System.out.println("Không tìm thấy khách hàng với số ID: " + customerId);
+            return;
+        }
+        for (Account account : accountList) {
+            if (((customer.getCustomerId()).equals(account.customerId))) {
+                customer.withdraw();
+                try {
+                    AccountDao.update(account);
+                    TransactionDao.save(account.getTransactions());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TransactionDao implements Serializable {
-    private final static String FILE_PATH = "C:\\Users\\tlbbs\\IdeaProjects\\ASG-02\\store\\customers.dat\\transactions.dat";
+    private final static String FILE_PATH = "C:\\Users\\tlbbs\\IdeaProjects\\ASG-02\\store\\transactions.dat";
 
     public static void save(List<Transaction> transactions) throws IOException {
         BinaryFileService.writeFile(FILE_PATH, transactions);

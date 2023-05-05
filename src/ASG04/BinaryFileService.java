@@ -12,7 +12,6 @@ public class BinaryFileService {
             while (!eof) {
                 try {
                     T object = (T) file.readObject();
-                    System.out.println(object);
                     objects.add(object);
                 } catch (EOFException e) {
                     eof = true;

@@ -39,13 +39,13 @@ public class Main {
                     addCustomerList();
                     break;
                 case "3":
-                    addaccountATM();
+                    addAccount();
                     break;
                 case "4":
-                    withdrawMoney();
+
                     break;
                 case "5":
-                    History();
+                    withdrawMoney();
                     break;
                 case "0":
                     break;
@@ -60,12 +60,13 @@ public class Main {
         activeBank.addCustomer(fileName);
     }
 
-    private static void addaccountATM() throws IOException {
-
-    }
-
-    public static void withdrawMoney() {
-
+    private static void addAccount() throws IOException {
+        String cusid;
+        do {
+            System.out.println("nhap ma so khach hang:  ");
+            cusid =sc.nextLine();
+        }while (!checkSo(cusid, 12)&&!activeBank.isAccountExisted(cusid));
+        activeBank.addSavingAccount(cusid);
     }
 
     public static void History() {
@@ -79,6 +80,15 @@ public class Main {
         }
         // kiểm tra chuỗi có chỉ chứa số hay không
         return cccd.matches("[0-9]+");
+    }
+
+    public static void withdrawMoney(){
+        String cusid;
+        do {
+            System.out.println("nhap ma so khach hang : ");
+            cusid =sc.nextLine();
+        }while (!checkSo(cusid, 12)&&!activeBank.isAccountExisted(cusid));
+        activeBank.withdraw(cusid);
     }
 
 }
