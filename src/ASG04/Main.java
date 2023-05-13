@@ -1,5 +1,5 @@
 package ASG04;
-
+import ASG04.model.DigitalBank;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     static final DigitalBank activeBank = new DigitalBank();
 
-    static String fileName = "C:\\Users\\tlbbs\\IdeaProjects\\ASG-02\\store\\customers.txt";
+    static String fileName = "store\\customers.txt";
 
 
     public static void main(String[] args) throws IOException {
@@ -42,10 +42,13 @@ public class Main {
                     addAccount();
                     break;
                 case "4":
-
+                    transfer();
                     break;
                 case "5":
                     withdrawMoney();
+                    break;
+                case "6":
+                    History();
                     break;
                 case "0":
                     break;
@@ -53,14 +56,14 @@ public class Main {
         }while(!chucNang.equals("0"));
     }
 
-    private static void showCustomerList() {
+    public static void showCustomerList() {
         activeBank.showCustomer();
     }
-    private static void addCustomerList(){
+    public static void addCustomerList(){
         activeBank.addCustomer(fileName);
     }
 
-    private static void addAccount() throws IOException {
+    public static void addAccount() throws IOException {
         String cusid;
         do {
             System.out.println("nhap ma so khach hang:  ");
@@ -69,9 +72,6 @@ public class Main {
         activeBank.addSavingAccount(cusid);
     }
 
-    public static void History() {
-
-    }
 
     public static boolean checkSo(String cccd, int length){
         // kiểm tra độ dài của chuỗi có đúng 12 kí tự không
@@ -82,13 +82,26 @@ public class Main {
         return cccd.matches("[0-9]+");
     }
 
-    public static void withdrawMoney(){
+    public static void withdrawMoney() throws IOException {
         String cusid;
         do {
             System.out.println("nhap ma so khach hang : ");
             cusid =sc.nextLine();
         }while (!checkSo(cusid, 12)&&!activeBank.isAccountExisted(cusid));
         activeBank.withdraw(cusid);
+    }
+
+    public static void transfer() throws IOException {
+        String cusid;
+        do {
+            System.out.println("nhap ma so khach hang : ");
+            cusid =sc.nextLine();
+        }while (!checkSo(cusid, 12)&&!activeBank.isAccountExisted(cusid));
+        activeBank.transfers(cusid);
+    }
+
+    public static void History() {
+        activeBank.showHistory();
     }
 
 }
